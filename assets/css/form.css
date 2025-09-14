@@ -61,6 +61,16 @@ fieldset legend h2 {
     margin: 1rem 0 1rem 1.5rem;
 }
 
+.receipt-metadata-form-fieldset {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.receipts-cover-switch {
+    width: 10rem;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -78,6 +88,29 @@ fieldset legend h2 {
     line-height: 1.5;
     padding: 0.5rem;
     font-size: 2rem;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.radio-input {
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+    margin-top: 0.5rem;
+    accent-color: black;
+}
+
+.radio-input input {
+    width: 3rem;
+    height: 3rem;
+}
+
+.radio-input p {
+    align-self: center;
 }
 
 .colour-group {
@@ -137,6 +170,10 @@ input[type="color"]::-moz-color-swatch {
 
 .error-text-colour {
     margin-left: 1.5rem;
+}
+
+.hide {
+    display: none !important;
 }
 
 @media (max-width: 1050px) {
