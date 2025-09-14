@@ -254,7 +254,42 @@ function deactivateReceiptsCover() {
   }
 }
 
+function toggleReceiptType(event) {
+  const type = event.target.value;
+
+  const buildingNumberInput = document.getElementById("building-number");
+  const buildingNumberGroup = buildingNumberInput.closest(".form-group");
+
+  const descriptionInput = document.getElementById("receipt-description");
+  const descriptionGroup = descriptionInput.closest(".form-group");
+
+  const rentValueLabel = document.querySelector("label[for='rent-value']");
+
+  if (type === "common") {
+    buildingNumberGroup.classList.add("hide");
+    buildingNumberInput.disabled = true;
+
+    descriptionGroup.classList.remove("hide");
+    descriptionInput.disabled = false;
+
+    rentValueLabel.innerText = "Valor";
+  } else {
+    buildingNumberGroup.classList.remove("hide");
+    buildingNumberInput.disabled = false;
+
+    descriptionGroup.classList.add("hide");
+    descriptionInput.disabled = true;
+
+    rentValueLabel.innerText = "Valor do aluguel";
+  }
+}
+
 const form = document.querySelector(".receipt-data-form");
+
+const typeRadios = document.getElementsByName("receipts-type");
+for (let i = 0; i < typeRadios.length; i++) {
+  typeRadios[i].addEventListener("change", toggleReceiptType);
+}
 
 document.getElementById("submit-button").addEventListener("click", main);
 

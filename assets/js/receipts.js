@@ -43,11 +43,16 @@ function createReceiptMainBodyText(data, dates) {
   const receiptMainBodyText = document.createElement("p");
   receiptMainBodyText.classList.add("receipt-main-body-text");
 
-  receiptMainBodyText.innerHTML = `Recebemos de <strong>${data["payers-name"]}</strong> 
-    a quantia de <strong>${data["written-rent-value"]}</strong>, referente ao aluguel de 
-    <strong>galpão nº ${data["building-number"]}</strong> conforme contrato lavrado em cartório. 
-    Aluguel correspondente aos dias de <strong>${dates[0]} a ${dates[1]}</strong>, e para clareza firmamos o presente.`;
-
+  if (data["receipts-type"] === "common") {
+    receiptMainBodyText.innerHTML = `Recebemos de <strong>${data["payers-name"]}</strong> 
+        a quantia de <strong>${data["written-rent-value"]}</strong> referente a 
+        <strong>${data["receipt-description"]}</strong>, e para clareza firmamos o presente.`;
+  } else {
+    receiptMainBodyText.innerHTML = `Recebemos de <strong>${data["payers-name"]}</strong> 
+        a quantia de <strong>${data["written-rent-value"]}</strong>, referente ao aluguel de 
+        <strong>galpão nº ${data["building-number"]}</strong> conforme contrato lavrado em cartório. 
+        Aluguel correspondente aos dias de <strong>${dates[0]} a ${dates[1]}</strong>, e para clareza firmamos o presente.`;
+  }
   return receiptMainBodyText;
 }
 
@@ -172,11 +177,17 @@ function createReceiptSummaryBody(data, dates) {
   );
   receiptSummaryBody.appendChild(receiptSummaryValueText);
 
-  const receiptSummaryRentText = createReceiptSummaryRentText();
-  receiptSummaryBody.appendChild(receiptSummaryRentText);
+  if (data["receipts-type"] === "common") {
+    const receiptSummaryDescription = document.createElement("p");
+    receiptSummaryDescription.innerHTML = `Referente a ${data["receipt-description"]}.`;
+    receiptSummaryBody.appendChild(receiptSummaryDescription);
+  } else {
+    const receiptSummaryRentText = createReceiptSummaryRentText();
+    receiptSummaryBody.appendChild(receiptSummaryRentText);
 
-  const receiptSummaryDates = createReceiptSummaryDates(dates);
-  receiptSummaryBody.appendChild(receiptSummaryDates);
+    const receiptSummaryDates = createReceiptSummaryDates(dates);
+    receiptSummaryBody.appendChild(receiptSummaryDates);
+  }
 
   const receiptCityAndFillingDate = createReceiptSummaryCityAndFillingDate(
     data["city-name"],
