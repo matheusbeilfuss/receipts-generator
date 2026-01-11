@@ -5,20 +5,30 @@ function createReceiptSpace() {
   return receiptSpace;
 }
 
-function createReceiptMainBodyPayersSignature() {
-  const receiptMainBodyPayersSignature = document.createElement("p");
-  receiptMainBodyPayersSignature.classList.add(
-    "receipt-main-body-payers-signature"
-  );
+function createReceiptMainBodyPayersSignature(data) {
+  const container = document.createElement("div");
+  container.classList.add("receipt-main-body-payers-signature-container");
 
-  const receiptMainBodyPayersSignatureText = document.createTextNode(
-    "Assinatura do Locatário: __________________________________."
-  );
-  receiptMainBodyPayersSignature.appendChild(
-    receiptMainBodyPayersSignatureText
-  );
+  const signature = document.createElement("p");
+  signature.classList.add("receipt-main-body-payers-signature");
 
-  return receiptMainBodyPayersSignature;
+  let signatureText =
+    "Assinatura do Locatário: __________________________________.";
+
+  if (data["receipts-type"] === "common") {
+    signatureText = "Assinatura: __________________________________.";
+  }
+
+  signature.appendChild(document.createTextNode(signatureText));
+  container.appendChild(signature);
+
+  if (data["receipts-type"] === "common" && data["issuer-name"]) {
+    const issuerName = document.createElement("p");
+    issuerName.innerHTML = `Nome: <strong>${data["issuer-name"]}</strong>`;
+    container.appendChild(issuerName);
+  }
+
+  return container;
 }
 
 function createReceiptMainBodyCityAndFillingDate(city, dates) {
@@ -26,14 +36,14 @@ function createReceiptMainBodyCityAndFillingDate(city, dates) {
 
   const receiptMainBodyCityAndFillingDate = document.createElement("p");
   receiptMainBodyCityAndFillingDate.classList.add(
-    "receipt-main-city-and-filling-date"
+    "receipt-main-city-and-filling-date",
   );
 
   const receiptMainBodyCityAndFillingDateFormatted = document.createTextNode(
-    `${city}, ______ de _______________________________ de ${year}.`
+    `${city}, ______ de _______________________________ de ${year}.`,
   );
   receiptMainBodyCityAndFillingDate.appendChild(
-    receiptMainBodyCityAndFillingDateFormatted
+    receiptMainBodyCityAndFillingDateFormatted,
   );
 
   return receiptMainBodyCityAndFillingDate;
@@ -67,7 +77,8 @@ function createReceiptMainBody(data, dates) {
     createReceiptMainBodyCityAndFillingDate(data["city-name"], dates);
   receiptMainBody.appendChild(receiptMainBodyCityAndFillingDate);
 
-  const receiptMainBodyPayersSignature = createReceiptMainBodyPayersSignature();
+  const receiptMainBodyPayersSignature =
+    createReceiptMainBodyPayersSignature(data);
   receiptMainBody.appendChild(receiptMainBodyPayersSignature);
 
   return receiptMainBody;
@@ -106,14 +117,14 @@ function createReceiptSummaryCityAndFillingDate(city, dates) {
 
   const receiptSummaryCityAndFillingDate = document.createElement("p");
   receiptSummaryCityAndFillingDate.classList.add(
-    "receipt-summary-city-and-filling-date"
+    "receipt-summary-city-and-filling-date",
   );
 
   const receiptSummaryCityAndFillingDateFormatted = document.createTextNode(
-    `${city}, ____/____/${year}.`
+    `${city}, ____/____/${year}.`,
   );
   receiptSummaryCityAndFillingDate.appendChild(
-    receiptSummaryCityAndFillingDateFormatted
+    receiptSummaryCityAndFillingDateFormatted,
   );
 
   return receiptSummaryCityAndFillingDate;
@@ -124,7 +135,7 @@ function createReceiptSummaryDates(dates) {
   receiptSummaryDates.classList.add("receipt-summary-dates");
 
   const receiptSummaryDatesFormatted = document.createTextNode(
-    `${dates[0]} a ${dates[1]}.`
+    `${dates[0]} a ${dates[1]}.`,
   );
   receiptSummaryDates.appendChild(receiptSummaryDatesFormatted);
 
@@ -166,14 +177,14 @@ function createReceiptSummaryBody(data, dates) {
   receiptSummaryBody.classList.add("receipt-summary-body");
 
   const receiptSummaryValueNumber = createReceiptValueNumber(
-    data["rent-value"]
+    data["rent-value"],
   );
   receiptSummaryValueNumber.classList.add("receipt-summary-value-number");
   receiptSummaryBody.appendChild(receiptSummaryValueNumber);
 
   const receiptSummaryValueText = createReceiptSummaryValueText(
     data["payers-name"],
-    data["written-rent-value"]
+    data["written-rent-value"],
   );
   receiptSummaryBody.appendChild(receiptSummaryValueText);
 
@@ -191,7 +202,7 @@ function createReceiptSummaryBody(data, dates) {
 
   const receiptCityAndFillingDate = createReceiptSummaryCityAndFillingDate(
     data["city-name"],
-    dates
+    dates,
   );
   receiptSummaryBody.appendChild(receiptCityAndFillingDate);
 
@@ -201,7 +212,7 @@ function createReceiptSummaryBody(data, dates) {
 function createReceiptNumber(receiptNumber) {
   const receiptNumberContainer = document.createElement("p");
   const receiptNumberText = document.createTextNode(
-    `RECIBO N° ${receiptNumber}`
+    `RECIBO N° ${receiptNumber}`,
   );
   receiptNumberContainer.appendChild(receiptNumberText);
 
@@ -239,7 +250,7 @@ function createReceiptSummary(receiptNumber, data, dates) {
 
   const receiptSummaryHeader = createReceiptSummaryHeader(
     data["receipt-number-id"],
-    receiptNumber
+    receiptNumber,
   );
   receiptSummary.appendChild(receiptSummaryHeader);
 
@@ -283,7 +294,7 @@ function generateDates(initialDate, receiptsQuantity) {
 
     if (day === 1) {
       receiptFinalDate = `${getMonthNumberOfDays(year, month)}/${addLeftZero(
-        month
+        month,
       )}/${year}`;
     } else if (month === 12) {
       receiptFinalDate = `${addLeftZero(day)}/${addLeftZero(month - 11)}/${
@@ -291,7 +302,7 @@ function generateDates(initialDate, receiptsQuantity) {
       }`;
     } else {
       receiptFinalDate = `${addLeftZero(day)}/${addLeftZero(
-        month + 1
+        month + 1,
       )}/${year}`;
     }
 
@@ -305,8 +316,17 @@ function generateDates(initialDate, receiptsQuantity) {
 export default function generateReceipts(receiptsContainer, data) {
   const initialDate = data["initial-date"];
   const receiptsQuantity = data["receipts-quantity"];
+  let dates;
 
-  const dates = generateDates(initialDate, receiptsQuantity);
+  if (data["receipts-type"] === "common") {
+    const currentYear = new Date().getFullYear();
+    dates = Array(parseInt(receiptsQuantity)).fill([
+      `01/01/${currentYear}`,
+      `01/01/${currentYear}`,
+    ]);
+  } else {
+    dates = generateDates(initialDate, receiptsQuantity);
+  }
 
   for (let i = 0; i < receiptsQuantity; i++) {
     const receiptContainer = createReceiptContainer();

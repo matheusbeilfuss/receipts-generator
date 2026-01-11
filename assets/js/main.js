@@ -161,11 +161,11 @@ String.prototype.extenso = function (c) {
         (i < 100
           ? t
           : !(i % 100)
-          ? ex[2][i == 100 ? 0 : (i / 100) >> 0]
-          : ex[2][(i / 100) >> 0] + e + t) +
+            ? ex[2][i == 100 ? 0 : (i / 100) >> 0]
+            : ex[2][(i / 100) >> 0] + e + t) +
           ((t = l - a - 2) > -1
             ? " " + (i > 1 && t > 0 ? ex[3][t].replace("ão", "ões") : ex[3][t])
-            : "")
+            : ""),
       );
     }
     a =
@@ -182,9 +182,9 @@ String.prototype.extenso = function (c) {
                   ? d + "s"
                   : (/0{6,}$/.test(n[0]) ? "de " : "") + $.replace("l", "is")
                 : j
-                ? d
-                : $)
-            : "")
+                  ? d
+                  : $)
+            : ""),
       );
   }
   return r.join(e);
@@ -265,12 +265,24 @@ function toggleReceiptType(event) {
 
   const rentValueLabel = document.querySelector("label[for='rent-value']");
 
+  const initialDateInput = document.getElementById("initial-date");
+  const initialDateGroup = document.getElementById("initial-date-container");
+
+  const issuerNameInput = document.getElementById("issuer-name");
+  const issuerNameGroup = document.getElementById("issuer-name-container");
+
   if (type === "common") {
     buildingNumberGroup.classList.add("hide");
     buildingNumberInput.disabled = true;
 
     descriptionGroup.classList.remove("hide");
     descriptionInput.disabled = false;
+
+    initialDateGroup.classList.add("hide");
+    initialDateInput.disabled = true;
+
+    issuerNameGroup.classList.remove("hide");
+    issuerNameInput.disabled = false;
 
     rentValueLabel.innerText = "Valor";
   } else {
@@ -279,6 +291,12 @@ function toggleReceiptType(event) {
 
     descriptionGroup.classList.add("hide");
     descriptionInput.disabled = true;
+
+    initialDateGroup.classList.remove("hide");
+    initialDateInput.disabled = false;
+
+    issuerNameGroup.classList.add("hide");
+    issuerNameInput.disabled = true;
 
     rentValueLabel.innerText = "Valor do aluguel";
   }
@@ -298,11 +316,11 @@ const inputs = document.getElementsByTagName("input");
 for (let i = 0; i < inputs.length; i++) {
   if (inputs[i].id === "underline-cover-colour") {
     inputs[i].addEventListener("keydown", (event) =>
-      focusNext(event, "submit-button")
+      focusNext(event, "submit-button"),
     );
   } else {
     inputs[i].addEventListener("keydown", (event) =>
-      focusNext(event, inputs[i + 1].id)
+      focusNext(event, inputs[i + 1].id),
     );
   }
 }
