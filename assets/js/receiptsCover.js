@@ -4,7 +4,7 @@ function createReceiptsCoverPayersData(data) {
 
   const receiptsCoverPayersDataContent = document.createElement("div");
   receiptsCoverPayersDataContent.classList.add(
-    "receipts-cover-payers-data-content"
+    "receipts-cover-payers-data-content",
   );
   receiptsCoverPayersData.appendChild(receiptsCoverPayersDataContent);
 
@@ -22,7 +22,7 @@ function createReceiptsCoverPayersData(data) {
       const ownersPhone = document.createElement("p");
       ownersPhone.classList.add("owners-phone");
       const ownersPhoneText = document.createTextNode(
-        data[`owners-phone-${i}`]
+        data[`owners-phone-${i}`],
       );
       ownersPhone.appendChild(ownersPhoneText);
       ownersData.appendChild(ownersPhone);
@@ -38,7 +38,7 @@ function createReceiptsCoverCompanyName(companyName, underlineColour) {
   receiptsCoverCompanyName.classList.add("receipts-cover-company-name");
   receiptsCoverCompanyName.style.textDecorationColor = underlineColour;
   const receiptsCoverCompanyNameText = document.createTextNode(
-    `${companyName}`
+    `${companyName}`,
   );
   receiptsCoverCompanyName.appendChild(receiptsCoverCompanyNameText);
 
@@ -49,7 +49,7 @@ function createReceiptsCoverBuildingNumber(buildingNumber) {
   const receiptsCoverBuildingNumber = document.createElement("p");
   receiptsCoverBuildingNumber.classList.add("receipts-cover-building-number");
   const receiptsCoverBuildingNumberText = document.createTextNode(
-    `Galpão N° ${buildingNumber}`
+    `Galpão N° ${buildingNumber}`,
   );
   receiptsCoverBuildingNumber.appendChild(receiptsCoverBuildingNumberText);
 
@@ -73,20 +73,22 @@ function createReceiptsCoverContainer(coverColour) {
 
 export default function generateCover(receiptsContainer, data) {
   const receiptsCoverContainer = createReceiptsCoverContainer(
-    data["cover-colour"]
+    data["cover-colour"],
   );
 
   const receiptsCoverDataContainer = createReceiptsCoverDataContainer();
   receiptsCoverContainer.appendChild(receiptsCoverDataContainer);
 
-  const receiptsCoverBuildingNumber = createReceiptsCoverBuildingNumber(
-    data["building-number"]
-  );
-  receiptsCoverDataContainer.appendChild(receiptsCoverBuildingNumber);
+  if (data["receipts-type"] !== "common") {
+    const receiptsCoverBuildingNumber = createReceiptsCoverBuildingNumber(
+      data["building-number"],
+    );
+    receiptsCoverDataContainer.appendChild(receiptsCoverBuildingNumber);
+  }
 
   const receiptsCoverCompanyName = createReceiptsCoverCompanyName(
     data["company-name"],
-    data["underline-cover-colour"]
+    data["underline-cover-colour"],
   );
   receiptsCoverDataContainer.appendChild(receiptsCoverCompanyName);
 
